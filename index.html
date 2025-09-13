@@ -18,21 +18,32 @@
             --muted: #e5e7eb;
             --correct: #16a34a;
             --incorrect: #ef4444;
+            --bg-light: #f3f4f6;
+            --bg-dark: #1f2937;
+            --text-light: #111827;
+            --text-dark: #f3f4f6;
         }
 
         body {
             font-family: "Roboto", "Noto Serif Thai", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        body.dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
         }
 
         .correct {
             color: var(--correct);
             font-weight: 700;
+            animation: pulse 0.5s;
         }
 
         .incorrect {
             color: var(--incorrect);
             font-weight: 700;
+            animation: shake 0.3s;
         }
 
         .option-btn {
@@ -49,6 +60,15 @@
             outline-offset: 2px;
         }
 
+        .dark .option-btn {
+            background-color: #374151;
+            color: var(--text-dark);
+        }
+
+        .dark .option-btn:hover:not([disabled]) {
+            background-color: #4b5563;
+        }
+
         /* Progress bar */
         .progress-bar {
             background: var(--muted);
@@ -56,6 +76,11 @@
             height: 10px;
             overflow: hidden;
         }
+
+        .dark .progress-bar {
+            background: #4b5563;
+        }
+
         .progress-inner {
             height: 100%;
             width: 0%;
@@ -67,13 +92,28 @@
         .question-container {
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
+
         .question-enter {
             opacity: 0;
             transform: translateY(10px);
         }
+
         .question-active {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         /* small helpers */
@@ -93,13 +133,16 @@
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
     <header class="bg-blue-600 text-white p-4 shadow-md">
-        <h1 class="text-3xl font-bold text-center">Học Tiếng Việt - เรียนภาษาเวียดนาม</h1>
-        <p class="text-center mt-2">Chào mừng bạn đến với khóa học tiếng Việt cơ bản! - ยินดีต้อนรับสู่คอร์สเรียนภาษาเวียดนามเบื้องต้น!</p>
+        <div class="flex justify-between items-center max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold">Học Tiếng Việt - เรียนภาษาเวียดนาม</h1>
+            <button id="themeToggle" class="bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500" aria-label="Chuyển đổi chế độ sáng/tối">🌙</button>
+        </div>
+        <p class="text-center mt-2 max-w-4xl mx-auto">Chào mừng bạn đến với khóa học tiếng Việt cơ bản! - ยินดีต้อนรับสู่คอร์สเรียนภาษาเวียดนามเบื้องต้น!</p>
     </header>
 
     <main class="max-w-4xl mx-auto p-6 flex-grow">
         <!-- Introduction -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <section class="bg-white p-6 rounded-lg shadow-md mb-6 dark:bg-gray-800 dark:text-gray-100">
             <h2 class="text-2xl font-semibold mb-4">Giới thiệu - แนะนำ</h2>
             <p>
                 Trang web này giúp bạn học những từ vựng và câu tiếng Việt cơ bản. Ví dụ:
@@ -109,45 +152,15 @@
             </p>
         </section>
 
-        <!-- Vocabulary -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-2xl font-semibold mb-4">Từ vựng cơ bản - คำศัพท์พื้นฐาน</h2>
-            <ul class="space-y-2 list-disc list-inside">
-                <li><strong>Xin chào - สวัสดี</strong>: Hello <br><em>Cách đọc: Sin-chào</em></li>
-                <li><strong>Cảm ơn - ขอบคุณ</strong>: Thank you <br><em>Cách đọc: Cảm-ơn</em></li>
-                <li><strong>Tạm biệt - ลาก่อน</strong>: Goodbye <br><em>Cách đọc: Tạm-biệt</em></li>
-                <li><strong>Bạn - เพื่อน</strong>: Friend <br><em>Cách đọc: Bẹn</em></li>
-                <li><strong>Tôi - ฉัน</strong>: I/Me <br><em>Cách đọc: Tôy</em></li>
-            </ul>
+        <!-- Menu -->
+        <section id="menuSection" class="bg-white p-6 rounded-lg shadow-md mb-6 dark:bg-gray-800 dark:text-gray-100">
         </section>
 
-        <!-- Phrases -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-2xl font-semibold mb-4">Câu giao tiếp cơ bản - ประโยคสนทนาพื้นฐาน</h2>
-            <ul class="space-y-4 list-none p-0">
-                <li>
-                    <strong>Tôi là người Thái - ฉันเป็นคนไทย</strong> <br>
-                    <em>Cách đọc: Tôi là người Thái</em> <br>
-                    <button class="text-blue-600 hover:underline px-0 play-audio" data-audio="https://example.com/audio1.mp3" aria-label="Phát âm thanh câu Tôi là người Thái">Nghe âm thanh - ฟังเสียง</button>
-                    <button class="text-gray-600 hover:underline px-2 pause-audio hidden" data-audio="https://example.com/audio1.mp3" aria-label="Tạm dừng âm thanh câu Tôi là người Thái">Tạm dừng - หยุด</button>
-                </li>
-                <li>
-                    <strong>Bạn tên là gì? - คุณชื่ออะไร?</strong> <br>
-                    <em>Cách đọc: Bạn tên là gì?</em> <br>
-                    <button class="text-blue-600 hover:underline px-0 play-audio" data-audio="https://example.com/audio2.mp3" aria-label="Phát âm thanh câu Bạn tên là gì?">Nghe âm thanh - ฟังเสียง</button>
-                    <button class="text-gray-600 hover:underline px-2 pause-audio hidden" data-audio="https://example.com/audio2.mp3" aria-label="Tạm dừng âm thanh câu Bạn tên là gì?">Tạm dừng - หยุด</button>
-                </li>
-                <li>
-                    <strong>Tôi muốn học tiếng Việt - ฉันอยากเรียนภาษาเวียดนาม</strong> <br>
-                    <em>Cách đọc: Tôi muốn học tiếng Việt</em> <br>
-                    <button class="text-blue-600 hover:underline px-0 play-audio" data-audio="https://example.com/audio3.mp3" aria-label="Phát âm thanh câu Tôi muốn học tiếng Việt">Nghe âm thanh - ฟังเสียง</button>
-                    <button class="text-gray-600 hover:underline px-2 pause-audio hidden" data-audio="https://example.com/audio3.mp3" aria-label="Tạm dừng âm thanh câu Tôi muốn học tiếng Việt">Tạm dừng - หยุด</button>
-                </li>
-            </ul>
-        </section>
+        <!-- Lesson Materials -->
+        <div id="lessonMaterials"></div>
 
         <!-- Quiz -->
-        <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <section class="bg-white p-6 rounded-lg shadow-md mb-6 dark:bg-gray-800 dark:text-gray-100">
             <h2 class="text-2xl font-semibold mb-4">Bài kiểm tra - แบบทดสอบ</h2>
             <p class="mb-4">Kiểm tra kiến thức của bạn với các câu hỏi trắc nghiệm dưới đây! - ทดสอบความรู้ของคุณด้วยคำถามแบบเลือกตอบด้านล่าง!</p>
 
@@ -158,7 +171,10 @@
             </div>
 
             <div id="quiz">
-                <div id="question" class="mb-4 text-lg font-medium question-container question-enter"></div>
+                <div class="flex items-center mb-4">
+                    <div id="question" class="text-lg font-medium question-container question-enter flex-grow"></div>
+                    <button id="playQuestionAudio" class="text-blue-600 hover:underline px-2 play-audio hidden" aria-label="Phát âm thanh câu hỏi">Nghe lại - ฟังอีกครั้ง</button>
+                </div>
                 <div id="options" class="space-y-2"></div>
 
                 <div class="mt-4">
@@ -167,15 +183,31 @@
                 </div>
 
                 <p id="result" class="mt-4"></p>
+                <p id="explanation" class="mt-2 text-gray-600 dark:text-gray-300"></p>
             </div>
         </section>
     </main>
 
-    <footer class="bg-gray-800 text-white p-4 text-center">
+    <footer class="bg-gray-800 text-white p-4 text-center dark:bg-gray-900">
         <p>Được tạo bởi Trần Lê Gia Bảo, TLGB TEAM</p>
     </footer>
 
     <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            body.classList.add('dark');
+            themeToggle.textContent = '☀️';
+        }
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const isDark = body.classList.contains('dark');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDark);
+        });
+
         // Audio handling
         const audioPlayer = new Audio();
         let currentAudioButton = null;
@@ -185,74 +217,159 @@
             pauseBtn.classList.toggle('hidden', !isPlaying);
         }
 
-        document.querySelectorAll('.play-audio').forEach(btn => {
-            const pauseBtn = btn.nextElementSibling;
-            btn.addEventListener('click', () => {
-                const url = btn.getAttribute('data-audio');
-                if (!url) {
-                    alert('Không có tệp âm thanh. - ไม่มีไฟล์เสียง');
-                    return;
-                }
-                if (audioPlayer.src !== url) {
-                    audioPlayer.src = url;
-                    audioPlayer.play().catch(() => alert('Không thể phát âm thanh. Vui lòng kiểm tra kết nối! - ไม่สามารถเล่นเสียงได้'));
-                    currentAudioButton = btn;
-                    toggleAudioButtons(btn, pauseBtn, true);
+        function attachAudioListeners() {
+            document.querySelectorAll('.play-audio').forEach(btn => {
+                const pauseBtn = btn.nextElementSibling;
+                if (pauseBtn && pauseBtn.classList.contains('pause-audio')) {
+                    btn.addEventListener('click', () => {
+                        const url = btn.getAttribute('data-audio');
+                        if (!url) {
+                            alert('Không có tệp âm thanh. - ไม่มีไฟล์เสียง');
+                            return;
+                        }
+                        if (audioPlayer.src !== url) {
+                            audioPlayer.src = url;
+                            audioPlayer.play().catch(() => alert('Không thể phát âm thanh. Vui lòng kiểm tra kết nối! - ไม่สามารถเล่นเสียงได้'));
+                            currentAudioButton = btn;
+                            toggleAudioButtons(btn, pauseBtn, true);
+                        }
+                    });
                 }
             });
-        });
 
-        document.querySelectorAll('.pause-audio').forEach(btn => {
-            btn.addEventListener('click', () => {
-                audioPlayer.pause();
-                toggleAudioButtons(btn.previousElementSibling, btn, false);
+            document.querySelectorAll('.pause-audio').forEach(btn => {
+                const playBtn = btn.previousElementSibling;
+                if (playBtn && playBtn.classList.contains('play-audio')) {
+                    btn.addEventListener('click', () => {
+                        audioPlayer.pause();
+                        toggleAudioButtons(playBtn, btn, false);
+                        currentAudioButton = null;
+                    });
+                }
             });
-        });
+        }
 
         audioPlayer.addEventListener('ended', () => {
             if (currentAudioButton) {
                 const pauseBtn = currentAudioButton.nextElementSibling;
-                toggleAudioButtons(currentAudioButton, pauseBtn, false);
+                if (pauseBtn && pauseBtn.classList.contains('pause-audio')) {
+                    toggleAudioButtons(currentAudioButton, pauseBtn, false);
+                }
+                currentAudioButton = null;
             }
         });
 
-        // Quiz data with audio for correct answers
-        const quizData = [
+        // Lessons data
+        const lessons = [
             {
-                question: "Từ 'Xin chào' trong tiếng Thái là gì?",
-                options: ["สวัสดี", "ขอบคุณ", "ลาก่อน", "เพื่อน"],
-                answer: "สวัสดี",
-                audio: "https://example.com/audio_xinchao.mp3"
+                title: "Bài 1: Chào hỏi cơ bản - บทที่ 1: การทักทายพื้นฐาน",
+                vocabTitle: "Từ vựng cơ bản - คำศัพท์พื้นฐาน",
+                vocab: [
+                    {viet: "Xin chào", thai: "สวัสดี", eng: "Hello", pron: "Sin-chào"},
+                    {viet: "Cảm ơn", thai: "ขอบคุณ", eng: "Thank you", pron: "Cảm-ơn"},
+                    {viet: "Tạm biệt", thai: "ลาก่อน", eng: "Goodbye", pron: "Tạm-biệt"},
+                    {viet: "Bạn", thai: "เพื่อน", eng: "Friend", pron: "Bẹn"},
+                    {viet: "Tôi", thai: "ฉัน", eng: "I/Me", pron: "Tôy"}
+                ],
+                phrasesTitle: "Câu giao tiếp cơ bản - ประโยคสนทนาพื้นฐาน",
+                phrases: [
+                    {viet: "Tôi là người Thái", thai: "ฉันเป็นคนไทย", pron: "Tôi là người Thái", audio: "https://example.com/audio1.mp3"},
+                    {viet: "Bạn tên là gì?", thai: "คุณชื่ออะไร?", pron: "Bạn tên là gì?", audio: "https://example.com/audio2.mp3"},
+                    {viet: "Tôi muốn học tiếng Việt", thai: "ฉันอยากเรียนภาษาเวียดนาม", pron: "Tôi muốn học tiếng Việt", audio: "https://example.com/audio3.mp3"}
+                ],
+                quizData: [
+                    {
+                        question: "Từ 'Xin chào' trong tiếng Thái là gì?",
+                        options: ["สวัสดี", "ขอบคุณ", "ลาก่อน", "เพื่อน"],
+                        answer: "สวัสดี",
+                        audio: "https://example.com/audio_xinchao.mp3",
+                        explanation: "'Xin chào' là cách chào hỏi cơ bản trong tiếng Việt, tương ứng với 'สวัสดี' trong tiếng Thái, được dùng trong mọi tình huống giao tiếp."
+                    },
+                    {
+                        question: "Câu 'Tôi là người Thái' trong tiếng Thái là gì?",
+                        options: ["ฉันอยากเรียนภาษาเวียดนาม", "คุณชื่ออะไร?", "ฉันเป็นคนไทย", "เพื่อนของฉัน"],
+                        answer: "ฉันเป็นคนไทย",
+                        audio: "https://example.com/audio1.mp3",
+                        explanation: "Câu 'Tôi là người Thái' được dịch sang tiếng Thái là 'ฉันเป็นคนไทย', dùng để giới thiệu nguồn gốc của mình."
+                    },
+                    {
+                        question: "Từ 'Cảm ơn' có nghĩa là gì trong tiếng Anh?",
+                        options: ["Hello", "Thank you", "Goodbye", "Friend"],
+                        answer: "Thank you",
+                        audio: "https://example.com/audio_camonn.mp3",
+                        explanation: "'Cảm ơn' là cách bày tỏ sự biết ơn trong tiếng Việt, tương ứng với 'Thank you' trong tiếng Anh."
+                    }
+                ]
             },
             {
-                question: "Câu 'Tôi là người Thái' trong tiếng Thái là gì?",
-                options: ["ฉันอยากเรียนภาษาเวียดนาม", "คุณชื่ออะไร?", "ฉันเป็นคนไทย", "เพื่อนของฉัน"],
-                answer: "ฉันเป็นคนไทย",
-                audio: "https://example.com/audio1.mp3"
-            },
-            {
-                question: "Từ 'Cảm ơn' có nghĩa là gì trong tiếng Anh?",
-                options: ["Hello", "Thank you", "Goodbye", "Friend"],
-                answer: "Thank you",
-                audio: "https://example.com/audio_camonn.mp3"
+                title: "Bài 2: Số đếm - บทที่ 2: การนับเลข",
+                vocabTitle: "Từ vựng số - คำศัพท์ตัวเลข",
+                vocab: [
+                    {viet: "Một", thai: "หนึ่ง", eng: "One", pron: "Một"},
+                    {viet: "Hai", thai: "สอง", eng: "Two", pron: "Hai"},
+                    {viet: "Ba", thai: "สาม", eng: "Three", pron: "Ba"},
+                    {viet: "Bốn", thai: "สี่", eng: "Four", pron: "Bốn"},
+                    {viet: "Năm", thai: "ห้า", eng: "Five", pron: "Năm"},
+                    {viet: "Sáu", thai: "หก", eng: "Six", pron: "Sáu"},
+                    {viet: "Bảy", thai: "เจ็ด", eng: "Seven", pron: "Bảy"},
+                    {viet: "Tám", thai: "แปด", eng: "Eight", pron: "Tám"},
+                    {viet: "Chín", thai: "เก้า", eng: "Nine", pron: "Chín"},
+                    {viet: "Mười", thai: "สิบ", eng: "Ten", pron: "Mười"}
+
+                ],
+                phrasesTitle: "Câu về số - ประโยคเกี่ยวกับตัวเลข",
+                phrases: [
+                    {viet: "Tôi có một người bạn", thai: "ฉันมีเพื่อนหนึ่งคน", pron: "Tôi có một người bạn", audio: "https://example.com/audio4.mp3"},
+                    {viet: "Bạn có bao nhiêu tuổi?", thai: "คุณอายุเท่าไหร่?", pron: "Bạn có bao nhiêu tuổi?", audio: "https://example.com/audio5.mp3"},
+                    {viet: "Số hai là gì?", thai: "เลขสองคืออะไร?", pron: "Số hai là gì?", audio: "https://example.com/audio6.mp3"}
+                ],
+                quizData: [
+                    {
+                        question: "Số 'Một' trong tiếng Thái là gì?",
+                        options: ["หนึ่ง", "สอง", "สาม", "สี่"],
+                        answer: "หนึ่ง",
+                        audio: "https://example.com/audio_mot.mp3",
+                        explanation: "'Một' là số đếm đầu tiên trong tiếng Việt, tương ứng với 'หนึ่ง' trong tiếng Thái."
+                    },
+                    {
+                        question: "Câu 'Tôi có một người bạn' trong tiếng Thái là gì?",
+                        options: ["ฉันมีเพื่อนหนึ่งคน", "คุณอายุเท่าไหร่?", "เลขสองคืออะไร?", "สวัสดี"],
+                        answer: "ฉันมีเพื่อนหนึ่งคน",
+                        audio: "https://example.com/audio4.mp3",
+                        explanation: "Câu này sử dụng số 'Một' để chỉ số lượng bạn bè, dịch sang tiếng Thái là 'ฉันมีเพื่อนหนึ่งคน'."
+                    },
+                    {
+                        question: "Từ 'Hai' có nghĩa là gì trong tiếng Anh?",
+                        options: ["One", "Two", "Three", "Four"],
+                        answer: "Two",
+                        audio: "https://example.com/audio_hai.mp3",
+                        explanation: "'Hai' là số đếm thứ hai trong tiếng Việt, tương ứng với 'Two' trong tiếng Anh."
+                    }
+                ]
             }
         ];
 
         // Storage keys
-        const KEY_Q = 'vietnam-course-currentQuestion';
-        const KEY_S = 'vietnam-course-score';
-        const KEY_A = 'vietnam-course-answers';
+        const KEY_Q = 'Q';
+        const KEY_S = 'S';
+        const KEY_A = 'A';
 
-        let currentQuestion = parseInt(localStorage.getItem(KEY_Q), 10) || 0;
-        let score = parseInt(localStorage.getItem(KEY_S), 10) || 0;
-        let userAnswers = JSON.parse(localStorage.getItem(KEY_A)) || {};
+        let currentLesson = parseInt(localStorage.getItem('currentLesson')) || 1;
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = {};
+        let quizData = [];
+
+        const getKey = (k) => `vietnam-course-l${currentLesson}-${k}`;
 
         const progressInner = document.getElementById('progressInner');
         const questionEl = document.getElementById('question');
         const optionsEl = document.getElementById('options');
         const resultEl = document.getElementById('result');
+        const explanationEl = document.getElementById('explanation');
         const submitBtn = document.getElementById('submitBtn');
         const restartBtn = document.getElementById('restartBtn');
+        const playQuestionAudio = document.getElementById('playQuestionAudio');
 
         function updateProgressBar() {
             const progress = Math.round(((currentQuestion) / quizData.length) * 100);
@@ -260,15 +377,85 @@
             progressInner.parentElement.setAttribute('aria-valuenow', String(progress));
         }
 
+        function loadMenu() {
+            const completedLessons = JSON.parse(localStorage.getItem('completedLessons')) || [];
+            const maxUnlocked = completedLessons.length + 1;
+            let menuHtml = '<h3 class="text-xl font-semibold mb-4">Chọn bài học - เลือกบทเรียน</h3><div>';
+            for (let i = 1; i <= lessons.length; i++) {
+                const unlocked = i <= maxUnlocked;
+                const isCompleted = completedLessons.includes(i);
+                const isCurrent = i === currentLesson;
+                let btnClass = 'px-4 py-2 rounded mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500';
+                if (!unlocked) {
+                    btnClass += ' bg-gray-300 text-gray-600 cursor-not-allowed';
+                } else if (isCompleted) {
+                    btnClass += ' bg-green-600 text-white';
+                } else if (isCurrent) {
+                    btnClass += ' bg-blue-600 text-white';
+                } else {
+                    btnClass += ' bg-blue-200 text-blue-800 hover:bg-blue-300';
+                }
+                menuHtml += `<button onclick="loadLesson(${i})" class="${btnClass}" ${!unlocked ? 'disabled' : ''}>${lessons[i-1].title}${isCompleted ? ' ✓' : ''}</button>`;
+            }
+            menuHtml += '</div>';
+            document.getElementById('menuSection').innerHTML = menuHtml;
+        }
+
+        function loadLesson(lessonNum) {
+            currentLesson = lessonNum;
+            localStorage.setItem('currentLesson', currentLesson);
+            const lesson = lessons[lessonNum - 1];
+            let materialsHtml = `
+                <section class="bg-white p-6 rounded-lg shadow-md mb-6 dark:bg-gray-800 dark:text-gray-100">
+                    <h2 class="text-2xl font-semibold mb-4">${lesson.vocabTitle}</h2>
+                    <ul class="space-y-2 list-disc list-inside">
+                        ${lesson.vocab.map(v => `<li><strong>${v.viet} - ${v.thai}</strong>: ${v.eng} <br><em>Cách đọc: ${v.pron}</em></li>`).join('')}
+                    </ul>
+                </section>
+                <section class="bg-white p-6 rounded-lg shadow-md mb-6 dark:bg-gray-800 dark:text-gray-100">
+                    <h2 class="text-2xl font-semibold mb-4">${lesson.phrasesTitle}</h2>
+                    <ul class="space-y-4 list-none p-0">
+                        ${lesson.phrases.map(p => `
+                            <li>
+                                <strong>${p.viet} - ${p.thai}</strong> <br>
+                                <em>Cách đọc: ${p.pron}</em> <br>
+                                <button class="text-blue-600 hover:underline px-0 play-audio" data-audio="${p.audio}" aria-label="Phát âm thanh câu ${p.viet}">Nghe âm thanh - ฟังเสียง</button>
+                                <button class="text-gray-600 hover:underline px-2 pause-audio hidden" data-audio="${p.audio}" aria-label="Tạm dừng âm thanh câu ${p.viet}">Tạm dừng - หยุด</button>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </section>
+            `;
+            document.getElementById('lessonMaterials').innerHTML = materialsHtml;
+            attachAudioListeners();
+            quizData = lesson.quizData;
+            loadQuestion();
+            loadMenu();
+        }
+
         function loadQuestion() {
+            const qKey = getKey(KEY_Q);
+            const sKey = getKey(KEY_S);
+            const aKey = getKey(KEY_A);
+            currentQuestion = parseInt(localStorage.getItem(qKey), 10) || 0;
+            score = parseInt(localStorage.getItem(sKey), 10) || 0;
+            userAnswers = JSON.parse(localStorage.getItem(aKey)) || {};
+
             resultEl.textContent = '';
+            explanationEl.textContent = '';
             submitBtn.style.display = 'none';
             restartBtn.style.display = 'none';
+            playQuestionAudio.classList.add('hidden');
             const q = quizData[currentQuestion];
-            questionEl.textContent = `Câu ${currentQuestion + 1}: ${q.question}`;
+            questionEl.textContent = `Câu ${currentQuestion + 1}/${quizData.length}: ${q.question}`;
             questionEl.classList.remove('question-active');
             questionEl.classList.add('question-enter');
             optionsEl.innerHTML = '';
+
+            if (q.audio) {
+                playQuestionAudio.classList.remove('hidden');
+                playQuestionAudio.setAttribute('data-audio', q.audio);
+            }
 
             setTimeout(() => {
                 questionEl.classList.remove('question-enter');
@@ -278,11 +465,11 @@
             q.options.forEach((opt, index) => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = 'option-btn block w-full text-left p-3 border rounded bg-white';
+                btn.className = 'option-btn block w-full text-left p-3 border rounded bg-white dark:bg-gray-700 dark:text-gray-100';
                 btn.textContent = opt;
                 btn.dataset.value = opt;
                 btn.setAttribute('aria-label', `Lựa chọn ${opt}`);
-                btn.addEventListener('click', () => handleSelect(btn, q.answer, q.audio));
+                btn.addEventListener('click', () => handleSelect(btn, q.answer, q.audio, q.explanation));
                 if (userAnswers[currentQuestion] === opt) {
                     btn.dataset.selected = 'true';
                     btn.disabled = true;
@@ -297,42 +484,44 @@
                 resultEl.innerHTML = userAnswers[currentQuestion] === q.answer
                     ? '<span class="correct">Đúng rồi! - ถูกต้อง!</span>'
                     : `<span class="incorrect">Sai rồi! Câu trả lời đúng là: ${q.answer} - ผิด! คำตอบที่ถูกต้องคือ: ${q.answer}</span>`;
+                explanationEl.textContent = q.explanation || '';
             }
 
             updateProgressBar();
+            attachAudioListeners();
         }
 
-        function handleSelect(button, correctAnswer, audioUrl) {
+        function handleSelect(button, correctAnswer, audioUrl, explanation) {
             if (optionsEl.querySelector('[data-selected="true"]')) return;
 
             button.dataset.selected = 'true';
             userAnswers[currentQuestion] = button.dataset.value;
-            localStorage.setItem(KEY_A, JSON.stringify(userAnswers));
+            localStorage.setItem(getKey(KEY_A), JSON.stringify(userAnswers));
 
             Array.from(optionsEl.children).forEach(b => {
                 b.disabled = true;
                 const val = b.dataset.value;
                 if (val === correctAnswer) {
-                    b.classList.add('border-green-300');
+                    b.classList.add('border-green-300', 'correct');
                 }
             });
 
             if (button.dataset.value === correctAnswer) {
                 score++;
+                localStorage.setItem(getKey(KEY_S), String(score));
                 resultEl.innerHTML = '<span class="correct">Đúng rồi! - ถูกต้อง!</span>';
-                localStorage.setItem(KEY_S, String(score));
                 if (audioUrl) {
                     audioPlayer.src = audioUrl;
                     audioPlayer.play().catch(() => console.warn('Không thể phát âm thanh'));
                 }
-                // Trigger vibration if available
                 if (navigator.vibrate) navigator.vibrate(200);
             } else {
                 resultEl.innerHTML = `<span class="incorrect">Sai rồi! Câu trả lời đúng là: ${correctAnswer} - ผิด! คำตอบที่ถูกต้องคือ: ${correctAnswer}</span>`;
-                button.classList.add('border-red-300');
+                button.classList.add('border-red-300', 'incorrect');
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
             }
 
+            explanationEl.textContent = explanation || '';
             submitBtn.style.display = 'inline-block';
             submitBtn.textContent = currentQuestion < quizData.length - 1 ? 'Câu tiếp theo - คำถามต่อไป' : 'Hoàn thành - เสร็จสิ้น';
             submitBtn.focus();
@@ -341,39 +530,55 @@
         submitBtn.addEventListener('click', () => {
             if (currentQuestion < quizData.length - 1) {
                 currentQuestion++;
-                localStorage.setItem(KEY_Q, String(currentQuestion));
+                localStorage.setItem(getKey(KEY_Q), String(currentQuestion));
                 loadQuestion();
             } else {
                 showResults();
             }
         });
 
-        restartBtn.addEventListener('click', resetQuiz);
+        restartBtn.addEventListener('click', resetCurrentQuiz);
 
         function showResults() {
             const total = quizData.length;
-            document.getElementById('quiz').innerHTML = `
+            let completedLessons = JSON.parse(localStorage.getItem('completedLessons')) || [];
+            if (!completedLessons.includes(currentLesson)) {
+                completedLessons.push(currentLesson);
+                localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+            }
+            loadMenu();
+            let resultsHtml = `
                 <p class="text-xl font-semibold mb-2">Bạn đã hoàn thành bài kiểm tra! - คุณทำแบบทดสอบเสร็จแล้ว!</p>
                 <p class="mb-4">Điểm số: ${score}/${total} - คะแนน: ${score}/${total}</p>
                 <div>
                     <button id="playAgain" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Làm lại bài kiểm tra - ทำแบบทดสอบใหม่</button>
+            `;
+            if (currentLesson < lessons.length) {
+                resultsHtml += `<button id="nextLesson" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 ml-2">Bài tiếp theo - บทเรียนถัดไป</button>`;
+            }
+            resultsHtml += `
                 </div>
             `;
-            localStorage.removeItem(KEY_Q);
-            localStorage.removeItem(KEY_S);
-            localStorage.removeItem(KEY_A);
+            document.getElementById('quiz').innerHTML = resultsHtml;
+            localStorage.removeItem(getKey(KEY_Q));
+            localStorage.removeItem(getKey(KEY_S));
+            localStorage.removeItem(getKey(KEY_A));
             progressInner.style.width = '100%';
-            document.getElementById('playAgain').addEventListener('click', resetQuiz);
+            document.getElementById('playAgain').addEventListener('click', resetCurrentQuiz);
+            const nextBtn = document.getElementById('nextLesson');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => loadLesson(currentLesson + 1));
+            }
         }
 
-        function resetQuiz() {
+        function resetCurrentQuiz() {
             currentQuestion = 0;
             score = 0;
             userAnswers = {};
-            localStorage.setItem(KEY_Q, '0');
-            localStorage.setItem(KEY_S, '0');
-            localStorage.setItem(KEY_A, JSON.stringify({}));
-            location.reload();
+            localStorage.setItem(getKey(KEY_Q), '0');
+            localStorage.setItem(getKey(KEY_S), '0');
+            localStorage.setItem(getKey(KEY_A), JSON.stringify({}));
+            loadQuestion();
         }
 
         // Keyboard navigation
@@ -386,8 +591,33 @@
             }
         });
 
+        // Lazy load audio
+        const audioObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const btn = entry.target;
+                    const audioUrl = btn.getAttribute('data-audio');
+                    if (audioUrl) {
+                        const audio = new Audio();
+                        audio.src = audioUrl;
+                        audio.preload = 'auto';
+                    }
+                    audioObserver.unobserve(btn);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.play-audio').forEach(btn => {
+            audioObserver.observe(btn);
+        });
+
         // Init
-        loadQuestion();
+        const initCompleted = JSON.parse(localStorage.getItem('completedLessons')) || [];
+        if (currentLesson > initCompleted.length + 1) {
+            currentLesson = initCompleted.length + 1 || 1;
+        }
+        loadMenu();
+        loadLesson(currentLesson);
     </script>
 </body>
 </html>
