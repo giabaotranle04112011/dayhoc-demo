@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Học Tiếng Việt - เรียนภาษาเวียดนาม</title>
+
+    <!-- Tailwind CDN (development) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --muted: #e5e7eb;
+            --correct: #16a34a;
+            --incorrect: #ef4444;
+        }
+
+        body {
+            font-family: "Roboto", "Noto Serif Thai", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            transition: background-color 0.2s ease;
+        }
+
+        .correct {
+            color: var(--correct);
+            font-weight: 700;
+        }
+
+        .incorrect {
+            color: var(--incorrect);
+            font-weight: 700;
+        }
+
+        .option-btn {
+            transition: transform 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            transform: scale(1.02);
+            background-color: #f8fafc;
+        }
+
+        .option-btn:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            background: var(--muted);
+            border-radius: 9999px;
+            height: 10px;
+            overflow: hidden;
+        }
+        .progress-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #60a5fa);
+            transition: width 300ms ease;
+        }
+
+        /* Animation for question transition */
+        .question-container {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .question-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .question-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* small helpers */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <h1 class="text-3xl font-bold text-center">Học Tiếng Việt - เรียนภาษาเวียดนาม</h1>
+        <p class="text-center mt-2">Chào mừng bạn đến với khóa học tiếng Việt cơ bản! - ยินดีต้อนรับสู่คอร์สเรียนภาษาเวียดนามเบื้องต้น!</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6 flex-grow">
+        <!-- Introduction -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Giới thiệu - แนะนำ</h2>
+            <p>
+                Trang web này giúp bạn học những từ vựng và câu tiếng Việt cơ bản. Ví dụ:
+                "Bạn tôi là người Thái nên chưa biết tiếng Việt" được dịch sang tiếng Thái là:
+                <br>
+                <strong>เพื่อนของฉันเป็นคนไทยจึงยังไม่รู้ภาษาเวียดนาม</strong>
+            </p>
+        </section>
+
+        <!-- Vocabulary -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Từ vựng cơ bản - คำศัพท์พื้นฐาน</h2>
+            <ul class="space-y-2 list-disc list-inside">
+                <li><strong>Xin chào - สวัสดี</strong>: Hello <br><em>Cách đọc: Sin-chào</em></li>
+                <li><strong>Cảm ơn - ขอบคุณ</strong>: Thank you <br><em>Cách đọc: Cảm-ơn</em></li>
+                <li><strong>Tạm biệt - ลาก่อน</strong>: Goodbye <br><em>Cách đọc: Tạm-biệt</em></li>
+                <li><strong>Bạn - เพื่อน</strong>: Friend <br><em>Cách đọc: Bẹn</em></li>
+                <li><strong>Tôi - ฉัน</strong>: I/Me <br><em>Cách đọc: Tôy</em></li>
+            </ul>
+        </section>
+
+        <!-- Phrases -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Câu giao tiếp cơ bản - ประโยคสนทนาพื้นฐาน</h2>
+            <ul class="space-y-4 list-none p-0">
+                <li>
+                    <strong>Tôi là người Thái - ฉันเป็นคนไทย</strong> <br>
+                    <em>Cách đọc: Tôi là người Thái</em> <br>
+                    <button class="text-blue-600 hover:underline px-0 play-audio" data-audio="https://example.com/audio1.mp3" aria-label="Phát âm thanh câu Tôi là người Thái">Nghe âm thanh - ฟังเสียง</button>
+                    <button class="text-gray-600 hover:underline px-2 pause-audio hidden" data-audio="https://example.com/audio1.mp3" aria-label="Tạm dừng âm thanh câu Tôi là người Thái">Tạm dừng - หยุด</button>
+                </li>
+                <li>
+                    <strong>Bạn tên là gì? - คุณชื่ออะไร?</strong> <br>
+                    <em>Cách đọc: Bạn tên là gì?</em> <br>
+                    <button class="text-blue-600 hover:underline px-0 play-audio" data-audio="https://example.com/audio2.mp3" aria-label="Phát âm thanh câu Bạn tên là gì?">Nghe âm thanh - ฟังเสียง</button>
+                    <button class="text-gray-600 hover:underline px-2 pause-audio hidden" data-audio="https://example.com/audio2.mp3" aria-label="Tạm dừng âm thanh câu Bạn tên là gì?">Tạm dừng - หยุด</button>
+                </li>
+                <li>
+                    <strong>Tôi muốn học tiếng Việt - ฉันอยากเรียนภาษาเวียดนาม</strong> <br>
+                    <em>Cách đọc: Tôi muốn học tiếng Việt</em> <br>
+                    <button class="text-blue-600 hover:underline px-0 play-audio" data-audio="https://example.com/audio3.mp3" aria-label="Phát âm thanh câu Tôi muốn học tiếng Việt">Nghe âm thanh - ฟังเสียง</button>
+                    <button class="text-gray-600 hover:underline px-2 pause-audio hidden" data-audio="https://example.com/audio3.mp3" aria-label="Tạm dừng âm thanh câu Tôi muốn học tiếng Việt">Tạm dừng - หยุด</button>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Quiz -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Bài kiểm tra - แบบทดสอบ</h2>
+            <p class="mb-4">Kiểm tra kiến thức của bạn với các câu hỏi trắc nghiệm dưới đây! - ทดสอบความรู้ของคุณด้วยคำถามแบบเลือกตอบด้านล่าง!</p>
+
+            <div class="w-full mb-4">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ bài kiểm tra">
+                    <div id="progressInner" class="progress-inner" style="width:0%"></div>
+                </div>
+            </div>
+
+            <div id="quiz">
+                <div id="question" class="mb-4 text-lg font-medium question-container question-enter"></div>
+                <div id="options" class="space-y-2"></div>
+
+                <div class="mt-4">
+                    <button id="submitBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" style="display:none">Câu tiếp theo - คำถามต่อไป</button>
+                    <button id="restartBtn" class="bg-gray-600 text-white px-3 py-2 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 ml-2" style="display:none">Làm lại - ทำใหม่</button>
+                </div>
+
+                <p id="result" class="mt-4"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center">
+        <p>Được tạo bởi Trần Lê Gia Bảo, TLGB TEAM</p>
+    </footer>
+
+    <script>
+        // Audio handling
+        const audioPlayer = new Audio();
+        let currentAudioButton = null;
+
+        function toggleAudioButtons(playBtn, pauseBtn, isPlaying) {
+            playBtn.classList.toggle('hidden', isPlaying);
+            pauseBtn.classList.toggle('hidden', !isPlaying);
+        }
+
+        document.querySelectorAll('.play-audio').forEach(btn => {
+            const pauseBtn = btn.nextElementSibling;
+            btn.addEventListener('click', () => {
+                const url = btn.getAttribute('data-audio');
+                if (!url) {
+                    alert('Không có tệp âm thanh. - ไม่มีไฟล์เสียง');
+                    return;
+                }
+                if (audioPlayer.src !== url) {
+                    audioPlayer.src = url;
+                    audioPlayer.play().catch(() => alert('Không thể phát âm thanh. Vui lòng kiểm tra kết nối! - ไม่สามารถเล่นเสียงได้'));
+                    currentAudioButton = btn;
+                    toggleAudioButtons(btn, pauseBtn, true);
+                }
+            });
+        });
+
+        document.querySelectorAll('.pause-audio').forEach(btn => {
+            btn.addEventListener('click', () => {
+                audioPlayer.pause();
+                toggleAudioButtons(btn.previousElementSibling, btn, false);
+            });
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            if (currentAudioButton) {
+                const pauseBtn = currentAudioButton.nextElementSibling;
+                toggleAudioButtons(currentAudioButton, pauseBtn, false);
+            }
+        });
+
+        // Quiz data with audio for correct answers
+        const quizData = [
+            {
+                question: "Từ 'Xin chào' trong tiếng Thái là gì?",
+                options: ["สวัสดี", "ขอบคุณ", "ลาก่อน", "เพื่อน"],
+                answer: "สวัสดี",
+                audio: "https://example.com/audio_xinchao.mp3"
+            },
+            {
+                question: "Câu 'Tôi là người Thái' trong tiếng Thái là gì?",
+                options: ["ฉันอยากเรียนภาษาเวียดนาม", "คุณชื่ออะไร?", "ฉันเป็นคนไทย", "เพื่อนของฉัน"],
+                answer: "ฉันเป็นคนไทย",
+                audio: "https://example.com/audio1.mp3"
+            },
+            {
+                question: "Từ 'Cảm ơn' có nghĩa là gì trong tiếng Anh?",
+                options: ["Hello", "Thank you", "Goodbye", "Friend"],
+                answer: "Thank you",
+                audio: "https://example.com/audio_camonn.mp3"
+            }
+        ];
+
+        // Storage keys
+        const KEY_Q = 'vietnam-course-currentQuestion';
+        const KEY_S = 'vietnam-course-score';
+        const KEY_A = 'vietnam-course-answers';
+
+        let currentQuestion = parseInt(localStorage.getItem(KEY_Q), 10) || 0;
+        let score = parseInt(localStorage.getItem(KEY_S), 10) || 0;
+        let userAnswers = JSON.parse(localStorage.getItem(KEY_A)) || {};
+
+        const progressInner = document.getElementById('progressInner');
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const resultEl = document.getElementById('result');
+        const submitBtn = document.getElementById('submitBtn');
+        const restartBtn = document.getElementById('restartBtn');
+
+        function updateProgressBar() {
+            const progress = Math.round(((currentQuestion) / quizData.length) * 100);
+            progressInner.style.width = progress + '%';
+            progressInner.parentElement.setAttribute('aria-valuenow', String(progress));
+        }
+
+        function loadQuestion() {
+            resultEl.textContent = '';
+            submitBtn.style.display = 'none';
+            restartBtn.style.display = 'none';
+            const q = quizData[currentQuestion];
+            questionEl.textContent = `Câu ${currentQuestion + 1}: ${q.question}`;
+            questionEl.classList.remove('question-active');
+            questionEl.classList.add('question-enter');
+            optionsEl.innerHTML = '';
+
+            setTimeout(() => {
+                questionEl.classList.remove('question-enter');
+                questionEl.classList.add('question-active');
+            }, 10);
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'option-btn block w-full text-left p-3 border rounded bg-white';
+                btn.textContent = opt;
+                btn.dataset.value = opt;
+                btn.setAttribute('aria-label', `Lựa chọn ${opt}`);
+                btn.addEventListener('click', () => handleSelect(btn, q.answer, q.audio));
+                if (userAnswers[currentQuestion] === opt) {
+                    btn.dataset.selected = 'true';
+                    btn.disabled = true;
+                    btn.classList.add(opt === q.answer ? 'border-green-300' : 'border-red-300');
+                }
+                optionsEl.appendChild(btn);
+            });
+
+            if (userAnswers[currentQuestion]) {
+                submitBtn.style.display = 'inline-block';
+                submitBtn.textContent = currentQuestion < quizData.length - 1 ? 'Câu tiếp theo - คำถามต่อไป' : 'Hoàn thành - เสร็จสิ้น';
+                resultEl.innerHTML = userAnswers[currentQuestion] === q.answer
+                    ? '<span class="correct">Đúng rồi! - ถูกต้อง!</span>'
+                    : `<span class="incorrect">Sai rồi! Câu trả lời đúng là: ${q.answer} - ผิด! คำตอบที่ถูกต้องคือ: ${q.answer}</span>`;
+            }
+
+            updateProgressBar();
+        }
+
+        function handleSelect(button, correctAnswer, audioUrl) {
+            if (optionsEl.querySelector('[data-selected="true"]')) return;
+
+            button.dataset.selected = 'true';
+            userAnswers[currentQuestion] = button.dataset.value;
+            localStorage.setItem(KEY_A, JSON.stringify(userAnswers));
+
+            Array.from(optionsEl.children).forEach(b => {
+                b.disabled = true;
+                const val = b.dataset.value;
+                if (val === correctAnswer) {
+                    b.classList.add('border-green-300');
+                }
+            });
+
+            if (button.dataset.value === correctAnswer) {
+                score++;
+                resultEl.innerHTML = '<span class="correct">Đúng rồi! - ถูกต้อง!</span>';
+                localStorage.setItem(KEY_S, String(score));
+                if (audioUrl) {
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.play().catch(() => console.warn('Không thể phát âm thanh'));
+                }
+                // Trigger vibration if available
+                if (navigator.vibrate) navigator.vibrate(200);
+            } else {
+                resultEl.innerHTML = `<span class="incorrect">Sai rồi! Câu trả lời đúng là: ${correctAnswer} - ผิด! คำตอบที่ถูกต้องคือ: ${correctAnswer}</span>`;
+                button.classList.add('border-red-300');
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            }
+
+            submitBtn.style.display = 'inline-block';
+            submitBtn.textContent = currentQuestion < quizData.length - 1 ? 'Câu tiếp theo - คำถามต่อไป' : 'Hoàn thành - เสร็จสิ้น';
+            submitBtn.focus();
+        }
+
+        submitBtn.addEventListener('click', () => {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                localStorage.setItem(KEY_Q, String(currentQuestion));
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        restartBtn.addEventListener('click', resetQuiz);
+
+        function showResults() {
+            const total = quizData.length;
+            document.getElementById('quiz').innerHTML = `
+                <p class="text-xl font-semibold mb-2">Bạn đã hoàn thành bài kiểm tra! - คุณทำแบบทดสอบเสร็จแล้ว!</p>
+                <p class="mb-4">Điểm số: ${score}/${total} - คะแนน: ${score}/${total}</p>
+                <div>
+                    <button id="playAgain" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Làm lại bài kiểm tra - ทำแบบทดสอบใหม่</button>
+                </div>
+            `;
+            localStorage.removeItem(KEY_Q);
+            localStorage.removeItem(KEY_S);
+            localStorage.removeItem(KEY_A);
+            progressInner.style.width = '100%';
+            document.getElementById('playAgain').addEventListener('click', resetQuiz);
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = {};
+            localStorage.setItem(KEY_Q, '0');
+            localStorage.setItem(KEY_S, '0');
+            localStorage.setItem(KEY_A, JSON.stringify({}));
+            location.reload();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const focused = document.activeElement;
+                if (focused.classList.contains('option-btn') && !focused.disabled) {
+                    focused.click();
+                }
+            }
+        });
+
+        // Init
+        loadQuestion();
+    </script>
+</body>
+</html>
